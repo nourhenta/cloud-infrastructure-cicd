@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  test-and-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,3 +26,7 @@ jobs:
       - name: Run tests
         working-directory: app
         run: python -m pytest
+
+      - name: Build Docker image
+        working-directory: app
+        run: docker build -t cloud-infra-app .
