@@ -45,3 +45,15 @@ jobs:
         run: |
           docker push nourcloudregistry.azurecr.io/cloud-infra-app:${{ github.sha }}
           docker push nourcloudregistry.azurecr.io/cloud-infra-app:latest
+            - name: Set Kubernetes context
+        uses: azure/k8s-set-context@v5
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+      - name: Deploy to AKS
+        run: |
+          kubectl set image deployment/cloud-infra-app \
+            cloud-infra-app=nourcloudregistry.azurecr.io/cloud-infra-app:${{ github.sha }}
+
+          kubectl rollout status deployment/cloud-infra-app
