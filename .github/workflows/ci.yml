@@ -30,22 +30,23 @@ jobs:
       - name: Log in to Azure Container Registry
         run: |
           echo "${{ secrets.ACR_PASSWORD }}" | docker login nourcloudregistry.azurecr.io \
-          --username "${{ secrets.ACR_USERNAME }}" \
-          --password-stdin
+            --username "${{ secrets.ACR_USERNAME }}" \
+            --password-stdin
 
       - name: Build Docker image
         working-directory: app
         run: |
           docker build \
-          -t nourcloudregistry.azurecr.io/cloud-infra-app:${{ github.sha }} \
-          -t nourcloudregistry.azurecr.io/cloud-infra-app:latest \
-          .
+            -t nourcloudregistry.azurecr.io/cloud-infra-app:${{ github.sha }} \
+            -t nourcloudregistry.azurecr.io/cloud-infra-app:latest \
+            .
 
       - name: Push Docker image
         run: |
           docker push nourcloudregistry.azurecr.io/cloud-infra-app:${{ github.sha }}
           docker push nourcloudregistry.azurecr.io/cloud-infra-app:latest
-            - name: Set Kubernetes context
+
+      - name: Set Kubernetes context
         uses: azure/k8s-set-context@v5
         with:
           method: kubeconfig
